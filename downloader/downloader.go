@@ -12,9 +12,10 @@ import (
 )
 
 type Download struct {
-	URL        string
-	PathToSave string
-	Sections   int
+	URL            string
+	PathToSave     string
+	Sections       int
+	SectionsFolder string
 }
 
 //return a http.Request with the inputed method
@@ -64,6 +65,9 @@ func (dw Download) DownloadStart() {
 
 	//downloading any section
 	var wg sync.WaitGroup
+	err = os.Mkdir(dw.SectionsFolder, os.ModePerm)
+	h.CheckErr(err)
+
 	for i, s := range sections {
 		wg.Add(1)
 		go func(i int, s [2]int) {
@@ -92,7 +96,7 @@ func (dw Download) DownloadSection(i int, s [2]int) {
 	h.CheckErr(err)
 
 	//writing body in a tmp file
-	err = ioutil.WriteFile(fmt.Sprintf("./section-%v.tmp", i), body, os.ModePerm)
+	err = ioutil.WriteFile(fmt.Sprintf("./%v/section-%v.tmp", dw.SectionsFolder, i), body, os.ModePerm)
 	h.CheckErr(err)
 }
 
@@ -109,7 +113,7 @@ func (dw Download) MergeTmpFiles(sections [][2]int) {
 
 	//reading sections tmp files and writing their contents on a only file
 	for i := range sections {
-		tmpFilename := fmt.Sprintf("./section-%v.tmp", i)
+		tmpFilename := fmt.Sprintf("./%v/section-%v.tmp", dw.SectionsFolder, i)
 		fileContent, err := ioutil.ReadFile(tmpFilename)
 		h.CheckErr(err)
 
@@ -121,4 +125,7 @@ func (dw Download) MergeTmpFiles(sections [][2]int) {
 		err = os.Remove(tmpFilename)
 		h.CheckErr(err)
 	}
+
+	err = os.Remove(dw.SectionsFolder)
+	h.CheckErr(err)
 }

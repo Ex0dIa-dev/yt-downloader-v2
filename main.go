@@ -42,8 +42,11 @@ func main() {
 
 	obj.Video.URL = urls[0]
 	obj.Video.PathToSave = "video.mp4"
+	obj.Video.SectionsFolder = "tmp-video-folder"
+
 	obj.Audio.URL = urls[1]
 	obj.Audio.PathToSave = "audio.webm"
+	obj.Audio.SectionsFolder = "tmp-audio-folder"
 
 	if obj.OutputFilename == "" {
 		obj.OutputFilename = fmt.Sprintf("%v.%v", obj.YoutubeTitle, obj.Format)
