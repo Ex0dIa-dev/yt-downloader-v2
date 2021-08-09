@@ -27,7 +27,7 @@ func (dw Download) NewHTTPRequest(method string) *http.Request {
 	return request
 }
 
-func (dw Download) Start() {
+func (dw Download) DownloadStart() {
 
 	req := dw.NewHTTPRequest("HEAD")
 	resp, err := http.DefaultClient.Do(req)
@@ -99,7 +99,7 @@ func (dw Download) DownloadSection(i int, s [2]int) {
 func (dw Download) MergeTmpFiles(sections [][2]int) {
 
 	//if file exists, remove it
-	if _, err := os.Stat(dw.PathToSave); err == nil {
+	if h.FileExists(dw.PathToSave) {
 		os.Remove(dw.PathToSave)
 	}
 
