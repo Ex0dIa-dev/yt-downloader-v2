@@ -24,6 +24,13 @@ type ToDownload struct {
 	AudioTMPFilename string
 }
 
+func (obj ToDownload) DownloadWBEM(wg *sync.WaitGroup) {
+
+	defer wg.Done()
+	obj.Audio.PathToSave = obj.OutputFilename
+	obj.Audio.DownloadStart()
+}
+
 func (obj ToDownload) DownloadMP3(wg *sync.WaitGroup) {
 	defer wg.Done()
 
@@ -40,6 +47,7 @@ func (obj ToDownload) DownloadMP4(wg *sync.WaitGroup) {
 
 }
 
+//return a []string which contains the download urls
 func (obj ToDownload) GetDirectURLs() []string {
 
 	out, err := exec.Command("youtube-dl", "-g", obj.YoutubeUrl).Output()
@@ -51,6 +59,7 @@ func (obj ToDownload) GetDirectURLs() []string {
 	return urls
 }
 
+//return the youtube title as string
 func (obj ToDownload) GetYoutubeTitle() string {
 
 	out, err := exec.Command("youtube-dl", "-e", obj.YoutubeUrl).Output()

@@ -29,3 +29,16 @@ func FileExists(filename string) bool {
 
 	return !stat.IsDir()
 }
+
+func CheckSupportedFormat(format string) bool {
+
+	supportedFormats := []string{"mp3", "mp4", "webm"}
+	for _, i := range supportedFormats {
+		if i == format {
+			return true
+		}
+	}
+
+	return false
+
+}

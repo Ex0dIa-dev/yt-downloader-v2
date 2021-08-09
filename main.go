@@ -33,6 +33,11 @@ func main() {
 		os.Exit(1)
 	}
 
+	if !h.CheckSupportedFormat(obj.Format) {
+		fmt.Println("[-]Please enter a supported format.")
+		os.Exit(1)
+	}
+
 	startTime := time.Now()
 
 	fmt.Println("[+]Verifying Url...")
@@ -80,6 +85,14 @@ func main() {
 
 		fmt.Printf("[+]Operation Completed in %v seconds.\n", time.Since(startTime).Seconds())
 
+	case "webm":
+		var wg sync.WaitGroup
+		wg.Add(1)
+
+		fmt.Println("[+]Download Started...")
+		obj.DownloadWBEM(&wg)
+		wg.Wait()
+		fmt.Printf("[+]Operation Completed in %v seconds.\n", time.Since(startTime).Seconds())
 	}
 
 }
